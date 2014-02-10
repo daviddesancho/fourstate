@@ -1,0 +1,12 @@
+strict digraph G {
+0 [shape=circle,width=0.004059];
+1 [shape=circle,width=0.002761];
+2 [shape=circle,width=0.000084];
+3 [shape=circle,width=0.993096];
+{rank=same; 1; 2;}
+0 -> 1  [penwidth=9.863692];
+2 -> 1  [penwidth=1.000000];
+0 -> 2  [penwidth=2.458310];
+1 -> 3  [penwidth=10.000000];
+2 -> 3  [penwidth=2.322002];
+}
