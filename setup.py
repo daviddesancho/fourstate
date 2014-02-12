@@ -17,7 +17,7 @@ setup(
 		author_email='daviddesancho.at.gmail.com',
 		license='GPL',
 		packages=find_packages(),
-		keywords= "pfold, kinetics",
+		keywords= "committors, kinetics",
 		long_description=read('README.txt'),
 		classifiers = ["""\
 				Development Status :: 1 - Planning

@@ -21,13 +21,16 @@ def plot_graph(*args):
 class FourState:
 	""" numerical example of a four state model"""
 
-	def __init__(self):
-		self.initialize()
+	def __init__(self,option=None):
+		if option == "random":
+			self.ran_initialize()
+		else:
+			self.fixed_initialize()
 		self.calc_trans()
 		self.calc_rate()
 		self.calc_eigs()
 
-	def initialize(self):
+	def ran_initialize(self):
 		""" initialize count matrix """
 		# initialize randomly
 		randint = np.random.randint(1000,size=(4,4)) 
@@ -50,6 +53,17 @@ class FourState:
 		self.count = randint
 		print "\n count matrix:"
 		print self.count
+
+	def fixed_initialize(self):
+		""" initialize count matrix """
+		# initialize randomly
+		self.count = np.array([[268324  ,  32 ,   470 ,     0],\
+				[   32,  120096 ,   350  ,   52],\
+				[   470 ,  350, 92721 ,   131],\
+				[     0  ,  52 ,   131, 636804]])
+		print "\n count matrix:"
+		print self.count
+
 
 	def calc_trans(self):
 		""" calculate transition matrix (assume lag time is 1)"""
@@ -232,7 +246,7 @@ class FourState:
 				d_K[elem,i] = -beta/2.*K[elem,i]*np.exp(beta*dg/2.);
 		for i in range(4):
 			d_K[i,i] = -np.sum(d_K[:,i])
-		self.d_K = d_K
+		return d_K
 
 	def partial_peq(self,elem,dg):
 		""" calculate derivative of equilibrium distribution """
@@ -244,7 +258,7 @@ class FourState:
 				d_peq.append(-beta*self.peq[i]*(1.-self.peq[i]))
 		return d_peq
 
-	def partial_pfold(self,elem,dg):
+	def partial_pfold(self,elem,dg,d_K):
 		""" calculate derivative of pfold """
 		K = self.K
 		peq = self.peq
@@ -265,13 +279,13 @@ class FourState:
 			sumd = 0.
 			for i in FF:
 				sum+= K[i][j]
-				sumd+= self.d_K[i][j]
+				sumd+= d_K[i][j]
 			b[j_ind] = -sum
 			db[j_ind] = -sumd
 			for i_ind in range(NI):
 				i = I[i_ind]
 				A[j_ind][i_ind] = K[i][j]
-				dA[j_ind][i_ind] = self.d_K[i][j]
+				dA[j_ind][i_ind] = d_K[i][j]
 
 		# solve Ax + Bd(x) = c
 		Ainv = np.linalg.inv(A)
@@ -289,29 +303,28 @@ class FourState:
 				dpfold[i] = x[ii]
 		return dpfold
 		
-	def partial_flux(self,elem,dg):
+	def partial_flux(self,elem):
 		""" calculate derivative of flux """
-		self.partial_rate(elem,dg)
-		d_K = self.d_K
+		d_K = self.partial_rate(elem,0.001)
 		print "\n d(K)/dg:"
 		print d_K
-		d_peq = self.partial_peq(elem,dg)
+		d_peq = self.partial_peq(elem,0.001)
 		print "\n d(Peq)/dg:"
 		print d_peq
-		d_pfold = self.partial_pfold(elem,dg)
+		d_pfold = self.partial_pfold(elem,0.001,d_K)
 		print "\n d(pfold)/dg"
 		print d_pfold
 		# flux matrix and reactive flux
 		sum_d_flux = 0
-		dJ = np.zeros([4,4],float)
+		d_J = np.zeros([4,4],float)
 		K = self.K
 		peq = self.peq
 		pfold = self.pfold
 		for i in range(4):
 		    for j in range(4):
-				dJ[j][i] = d_K[j][i]*peq[i]*(pfold[j]-pfold[i]) + \
+				d_J[j][i] = d_K[j][i]*peq[i]*(pfold[j]-pfold[i]) + \
 					K[j][i]*d_peq[i]*(pfold[j]-pfold[i]) + \
 					K[j][i]*peq[i]*(d_pfold[j]-d_pfold[i])
 				if j==3: #  dividing line corresponds to I to F transitions						
-					sum_d_flux += dJ[j][i]
-		return sum_d_flux
+					sum_d_flux += d_J[j][i]
+		return sum_d_flux,d_peq,d_pfold,d_J,d_K

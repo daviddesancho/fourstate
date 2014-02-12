@@ -1,0 +1,8 @@
+LICENSE.txt
+MANIFEST.in
+README.txt
+setup.py
+FourState.egg-info/PKG-INFO
+FourState.egg-info/SOURCES.txt
+FourState.egg-info/dependency_links.txt
+FourState.egg-info/top_level.txt

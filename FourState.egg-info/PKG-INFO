@@ -1,0 +1,33 @@
+Metadata-Version: 1.0
+Name: FourState
+Version: 0.1dev
+Summary: committors of a four state model
+Home-page: http://github.com/daviddesancho/fourstate
+Author: David De Sancho
+Author-email: daviddesancho.at.gmail.com
+License: GPL
+Description: =======
+        FourState
+        =======
+        
+        This is a simple class to explore the dynamics in a kinetic network involving
+        4 states with 2 intermediates.
+        
+        Contributors
+        ============
+        This code has been written by David De Sancho.
+        
+        Installation
+        ============
+        
+          python setup.py install --user
+        
+Keywords: committors,kinetics
+Platform: UNKNOWN
+Classifier: 				Development Status :: 1 - Planning
+				Operating System :: POSIX :: Linux
+				Operating System :: MacOS
+				Programming Language :: Python :: 2.7
+				Topic :: Scientific/Engineering :: Bio-Informatics
+				Topic :: Scientific/Engineering :: Chemistry
+				
