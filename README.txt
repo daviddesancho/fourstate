@@ -25,7 +25,11 @@ Basic usage
    import FourState 
 
    bhs = fourstate.FourState("random") # initialize the four-state model randomly
+
    bhs.run_simul("output_name") # run simulation to see time-evolution of populations
+
    bhs.run_commit() # calculate committor
+
    bhs.fold_rate() # calculate folding rate
+
    bhs.do_dot() # plot the network in dot format for graphviz processing
